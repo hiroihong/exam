@@ -35,12 +35,17 @@ public class BoardController {
 	}
 	
 	@GetMapping("/delete/{boardSeq}")
-	public void delete(@PathVariable int boardSeq) {
+	public boolean delete(@PathVariable int boardSeq) {
+		Board board = boardService.get(boardSeq);
+		if(board == null) {
+			return false;
+		} 
 		boardService.delete(boardSeq);
+		return true;
 	}
 	
-	public void update(Board board) {
-		boardService.update(board);
-	}
+//	public void update(Board board) {
+//		boardService.update(board);
+//	}
 	
 }
