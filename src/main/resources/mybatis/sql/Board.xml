@@ -25,7 +25,7 @@
     ORDER BY B.REG_DATE DESC
   </select>
   
-   <insert id="save" parameterType="com.example.demo.mvc.domain.Board" useGeneratedKeys="true" keyProperty="boardSeq">
+   <insert id="save" parameterType="com.example.demo.mvc.parameter.BoardParameter" useGeneratedKeys="true" keyProperty="boardSeq">
    INSERT INTO T_BOARD
    (
    		TITLE,
@@ -39,12 +39,11 @@
 	)
   </insert>
   
-   <update id="update" parameterType="com.example.demo.mvc.domain.Board">
+   <update id="update" parameterType="com.example.demo.mvc.parameter.BoardParameter">
    UPDATE T_BOARD
    SET
    		TITLE = #{title},
-    	CONTENTS = #{contents},
-    	REG_DATE = #{regDate}
+    	CONTENTS = #{contents}
     WHERE
     	BOARD_SEQ = #{boardSeq}
   </update>

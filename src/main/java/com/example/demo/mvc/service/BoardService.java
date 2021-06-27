@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mvc.domain.Board;
+import com.example.demo.mvc.parameter.BoardParameter;
 import com.example.demo.mvc.repository.BoardRepository;
 
 @Service
@@ -22,7 +23,7 @@ public class BoardService {
 		return repository.get(boardSeq);
 	}
 
-	public int save(Board board) {
+	public int save(BoardParameter board) {
 		// 조회해서 리턴된 정보가 있으면 업데이트
 		Board tmp = repository.get(board.getBoardSeq());
 		if(tmp == null) {

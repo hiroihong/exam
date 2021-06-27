@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.mvc.domain.Board;
+import com.example.demo.mvc.parameter.BoardParameter;
 
 @Repository
 public interface BoardRepository {
@@ -13,10 +14,10 @@ public interface BoardRepository {
 		
 	Board get(int boardSeq);
 	
-	int save(Board board);
+	int save(BoardParameter board);
 	
 	void delete(int boardSeq);
 	
-	void update(Board board);
+	void update(BoardParameter board);
 	
 }
