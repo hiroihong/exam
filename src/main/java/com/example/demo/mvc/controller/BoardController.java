@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.configuration.exception.BaseException;
 import com.example.demo.configuration.http.BaseResponse;
+import com.example.demo.configuration.http.BaseResponseCode;
 import com.example.demo.mvc.domain.Board;
 import com.example.demo.mvc.parameter.BoardParameter;
 import com.example.demo.mvc.service.BoardService;
@@ -41,9 +44,15 @@ public class BoardController {
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
 	})
 	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+		Board board = boardService.get(boardSeq);
+		//null처리
+		if(board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] {"게시물"});
+		}
 		return new BaseResponse<Board>(boardService.get(boardSeq));
 	}
 	
+	@SuppressWarnings("deprecation")
 	@PutMapping
 	@ApiOperation(value = "등록 / 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({
@@ -51,8 +60,16 @@ public class BoardController {
 		@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 		@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌")
 	})
-	public BaseResponse<Integer> save(BoardParameter board) {
-		return new BaseResponse<Integer>(boardService.save(board));
+	public BaseResponse<Integer> save(BoardParameter parameter) {
+		//제목 필수 체크
+		if(StringUtils.isEmpty(parameter.getTitle())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] {"title","제목"});
+		}
+		//내용 필수 체크
+		if(StringUtils.isEmpty(parameter.getContents())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] {"title","컨텐츠"});
+		}
+		return new BaseResponse<Integer>(boardService.save(parameter));
 	}
 	
 	@DeleteMapping("/{boardSeq}")
