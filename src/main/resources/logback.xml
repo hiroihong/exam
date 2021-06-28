@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="LOG_PATTERN"
+		value="%d{yyyy-MM-dd HH:mm:ss} %p %c[%method:%line] - %msg%n" />
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>${LOG_PATTERN}</Pattern>
+		</layout>
+	</appender>
+
+	<logger name="com.example.demo.mvc.repository" level="ERROR"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework.boot" level="ERROR"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework.boot.devtools.restart"
+		level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework" level="ERROR"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="springfox" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.hibernate" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.apache" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.apache.http.impl.conn" level="ERROR"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="log4jdbc" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.mybatis" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="com.zaxxer" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<!-- Query Loggers -->
+	<logger name="jdbc" level="OFF" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.sqlonly" level="OFF" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.sqltiming" level="INFO" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.resultsettable" level="INFO"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.audit" level="OFF" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.resultset" level="OFF" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="jdbc.connection" level="OFF" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>  

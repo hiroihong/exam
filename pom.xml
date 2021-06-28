@@ -60,15 +60,20 @@
 		    <artifactId>springfox-swagger2</artifactId>
 		    <version>${swagger.version}</version>
 		</dependency>
+		<!-- API 문서화 UI -->
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
 		<dependency>
     		<groupId>io.springfox</groupId>
     		<artifactId>springfox-swagger-ui</artifactId>
     		<version>${swagger.version}</version>
 		</dependency>
-				 
+		<!-- dirverSpy LOG에 SQL표시 -->
+		 <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>1.16</version>
+        </dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
