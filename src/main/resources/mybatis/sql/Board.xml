@@ -2,56 +2,87 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-<mapper namespace="com.example.demo.mvc.repository.BoardRepository">
-  <select id="getList" parameterType="com.example.demo.mvc.domain.Board" resultType="com.example.demo.mvc.domain.Board">
-    SELECT 
-    	B.BOARD_SEQ,
-    	B.TITLE,
-    	B.CONTENTS,
-    	B.REG_DATE 
-    FROM T_BOARD B 
-    ORDER BY B.REG_DATE DESC
-  </select>
-  
-  <select id="get" parameterType="com.example.demo.mvc.domain.Board" resultType="com.example.demo.mvc.domain.Board">
-    SELECT 
-    	B.BOARD_SEQ,
-    	B.TITLE,
-    	B.CONTENTS,
-    	B.REG_DATE 
-    FROM T_BOARD B 
-    WHERE B.BOARD_SEQ = #{boardSeq}
-    ORDER BY B.REG_DATE DESC
-  </select>
-  
-   <insert id="save" parameterType="com.example.demo.mvc.parameter.BoardParameter" useGeneratedKeys="true" keyProperty="boardSeq">
-   INSERT INTO T_BOARD
-   (
-   		TITLE,
-    	CONTENTS,
-    	REG_DATE 
-   )
-   VALUES (
-    	#{title},
-    	#{contents},
-    	NOW()
-	)
-  </insert>
-  
-   <update id="update" parameterType="com.example.demo.mvc.parameter.BoardParameter">
-   UPDATE T_BOARD
-   SET
-   		TITLE = #{title},
-    	CONTENTS = #{contents}
-    WHERE
-    	BOARD_SEQ = #{boardSeq}
-  </update>
-  
-   <delete id="delete" parameterType="com.example.demo.mvc.domain.Board">
-   DELETE FROM T_BOARD
-       WHERE
-    	BOARD_SEQ = #{boardSeq}
-  </delete>
-  
+
+<mapper
+	namespace="com.example.demo.mvc.repository.BoardRepository">
+	<select id="getList"
+		parameterType="com.example.demo.mvc.domain.Board"
+		resultType="com.example.demo.mvc.domain.Board">
+		SELECT
+		B.BOARD_SEQ,
+		B.BOARD_TYPE,
+		B.TITLE,
+		B.CONTENTS,
+		B.REG_DATE
+		FROM T_BOARD B
+		ORDER BY B.REG_DATE DESC
+	</select>
+
+	<select id="get"
+		parameterType="com.example.demo.mvc.domain.Board"
+		resultType="com.example.demo.mvc.domain.Board">
+		SELECT
+			B.BOARD_SEQ,
+			B.BOARD_TYPE,
+			B.TITLE,
+			B.CONTENTS,
+			B.REG_DATE
+		FROM T_BOARD B
+		WHERE B.BOARD_SEQ = #{boardSeq}
+		ORDER BY B.REG_DATE DESC
+	</select>
+
+	<insert id="save"
+		parameterType="com.example.demo.mvc.parameter.BoardParameter"
+		useGeneratedKeys="true" keyProperty="boardSeq">
+		INSERT INTO T_BOARD
+		(
+			BOARD_TYPE,
+			TITLE,
+			CONTENTS,
+			REG_DATE
+		)
+		VALUES (
+			#{boardType.code},
+			#{title},
+			#{contents},
+			NOW()
+		)
+	</insert>
+
+	<insert id="saveList" parameterType="map">
+		INSERT INTO T_BOARD
+		(
+			TITLE,
+			CONTENTS,
+			REG_DATE
+		)
+		VALUES
+		<foreach collection="boardList" item="board" separator=",">
+			(
+			#{board.title},
+			#{board.contents},
+			NOW()
+			)
+		</foreach>
+	</insert>
+
+	<update id="update"
+		parameterType="com.example.demo.mvc.parameter.BoardParameter">
+		UPDATE T_BOARD
+		SET
+			BOARD_TYPE = #{boardType.code},
+			TITLE = #{title},
+			CONTENTS = #{contents}
+		WHERE
+			BOARD_SEQ = #{boardSeq}
+	</update>
+
+	<delete id="delete"
+		parameterType="com.example.demo.mvc.domain.Board">
+		DELETE FROM T_BOARD
+		WHERE
+		BOARD_SEQ = #{boardSeq}
+	</delete>
+
 </mapper>
