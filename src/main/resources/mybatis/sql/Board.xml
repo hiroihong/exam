@@ -37,13 +37,11 @@
 		useGeneratedKeys="true" keyProperty="boardSeq">
 		INSERT INTO T_BOARD
 		(
-			BOARD_TYPE,
 			TITLE,
 			CONTENTS,
 			REG_DATE
 		)
 		VALUES (
-			#{boardType.code},
 			#{title},
 			#{contents},
 			NOW()

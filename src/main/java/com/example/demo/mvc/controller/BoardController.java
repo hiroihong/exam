@@ -1,10 +1,12 @@
 package com.example.demo.mvc.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,64 +32,107 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "게시판 API")
 public class BoardController {
 	
-	@Autowired BoardService boardService;
+	Logger logger = LoggerFactory.getLogger(BoardController.class);
+
+	@Autowired
+	BoardService boardService;
 
 	@GetMapping
 	@ApiOperation(value = "목록 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(){
+	public BaseResponse<List<Board>> getList() {
 		return new BaseResponse<List<Board>>(boardService.getList());
 	}
-	
+
 	@GetMapping("/{boardSeq}")
 	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
-	})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1") })
 	public BaseResponse<Board> get(@PathVariable int boardSeq) {
 		Board board = boardService.get(boardSeq);
-		//null처리
-		if(board == null) {
-			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] {"게시물"});
+		// null처리
+		if (board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
 		return new BaseResponse<Board>(boardService.get(boardSeq));
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@PutMapping
 	@ApiOperation(value = "등록 / 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
-		@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
-		@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌")
-	})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
+			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
+			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌") })
 	public BaseResponse<Integer> save(BoardParameter parameter) {
-		//제목 필수 체크
-		if(StringUtils.isEmpty(parameter.getTitle())) {
-			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] {"title","제목"});
+		// 제목 필수 체크
+		if (StringUtils.hasText(parameter.getTitle())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] { "title", "제목" });
 		}
-		//내용 필수 체크
-		if(StringUtils.isEmpty(parameter.getContents())) {
-			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] {"title","컨텐츠"});
+		// 내용 필수 체크
+		if (StringUtils.hasText(parameter.getContents())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] { "title", "컨텐츠" });
 		}
 		return new BaseResponse<Integer>(boardService.save(parameter));
 	}
-	
-	@DeleteMapping("/{boardSeq}")
-	@ApiOperation(value = "삭제 처리", notes = "게시물 번호에 해당하는 정보를 삭제합니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
-	})
-	public BaseResponse<Boolean> delete(@PathVariable int boardSeq) {
-		Board board = boardService.get(boardSeq);
-		if(board == null) {
-			return new BaseResponse<Boolean>(false);
-		} 
-		boardService.delete(boardSeq);
+
+	@ApiOperation(value = "대용량 등록처리1", notes = "대용량 등록처리1")
+	@PutMapping("/saveList1")
+	public BaseResponse<Boolean> saveList1() {
+		int count = 0;
+		List<BoardParameter> list = new ArrayList<BoardParameter>();
+		while (true) {
+			count++;
+			String title = RandomStringUtils.randomAlphabetic(10);
+			String contents = RandomStringUtils.randomAlphabetic(10);
+			list.add(BoardParameter.builder().title(title).contents(contents).build());
+			if(count >= 10000) {
+				break;
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		boardService.saveList1(list);
+		long end = System.currentTimeMillis();
+		logger.info("실행 시간 : {}", (end - start) / 100);
+		
 		return new BaseResponse<Boolean>(true);
 	}
 	
+	@ApiOperation(value = "대용량 등록처리2", notes = "대용량 등록처리2")
+	@PutMapping("/saveList2")
+	public BaseResponse<Boolean> saveList2() {
+		int count = 0;
+		List<BoardParameter> list = new ArrayList<BoardParameter>();
+		while (true) {
+			count++;
+			String title = RandomStringUtils.randomAlphabetic(10);
+			String contents = RandomStringUtils.randomAlphabetic(10);
+			list.add(BoardParameter.builder().title(title).contents(contents).build());
+			if(count >= 10000) {
+				break;
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		boardService.saveList2(list);
+		long end = System.currentTimeMillis();
+		logger.info("실행 시간 : {}", (end - start) / 100);
+		
+		return new BaseResponse<Boolean>(true);
+	}
+
+	@DeleteMapping("/{boardSeq}")
+	@ApiOperation(value = "삭제 처리", notes = "게시물 번호에 해당하는 정보를 삭제합니다.")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1") })
+	public BaseResponse<Boolean> delete(@PathVariable int boardSeq) {
+		Board board = boardService.get(boardSeq);
+		if (board == null) {
+			return new BaseResponse<Boolean>(false);
+		}
+		boardService.delete(boardSeq);
+		return new BaseResponse<Boolean>(true);
+	}
+
 //	public void update(Board board) {
 //		boardService.update(board);
 //	}
-	
+
 }

@@ -73,6 +73,11 @@
             <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
             <version>1.16</version>
         </dependency>
+        <!-- 테스터 데이터 랜덤 문자열 생성을 위해 lang3 추가 -->
+        <dependency>
+        	<groupId>org.apache.commons</groupId>
+        	<artifactId>commons-lang3</artifactId>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
