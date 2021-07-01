@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.mvc.domain.Board;
 import com.example.demo.mvc.parameter.BoardParameter;
+import com.example.demo.mvc.parameter.BoardSearchParameter;
 
 @Repository
 public interface BoardRepository {
 
-	List<Board> getList();
+	List<Board> getList(BoardSearchParameter parameter);
 		
 	Board get(int boardSeq);
 	

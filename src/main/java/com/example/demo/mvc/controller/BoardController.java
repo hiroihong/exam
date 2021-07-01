@@ -20,18 +20,20 @@ import com.example.demo.configuration.http.BaseResponse;
 import com.example.demo.configuration.http.BaseResponseCode;
 import com.example.demo.mvc.domain.Board;
 import com.example.demo.mvc.parameter.BoardParameter;
+import com.example.demo.mvc.parameter.BoardSearchParameter;
 import com.example.demo.mvc.service.BoardService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/board")
 @Api(tags = "게시판 API")
 public class BoardController {
-	
+
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
 
 	@Autowired
@@ -39,8 +41,10 @@ public class BoardController {
 
 	@GetMapping
 	@ApiOperation(value = "목록 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList() {
-		return new BaseResponse<List<Board>>(boardService.getList());
+	@ApiImplicitParams({ @ApiImplicitParam(name = "keyword", value = "컨텐츠"),
+			@ApiImplicitParam(name = "boardTypes", value = "게시물검색"), })
+	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter parameter) {
+		return new BaseResponse<List<Board>>(boardService.getList(parameter));
 	}
 
 	@GetMapping("/{boardSeq}")
@@ -55,7 +59,6 @@ public class BoardController {
 		return new BaseResponse<Board>(boardService.get(boardSeq));
 	}
 
-	@SuppressWarnings("deprecation")
 	@PutMapping
 	@ApiOperation(value = "등록 / 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
@@ -83,19 +86,19 @@ public class BoardController {
 			String title = RandomStringUtils.randomAlphabetic(10);
 			String contents = RandomStringUtils.randomAlphabetic(10);
 			list.add(BoardParameter.builder().title(title).contents(contents).build());
-			if(count >= 10000) {
+			if (count >= 10000) {
 				break;
 			}
 		}
-		
+
 		long start = System.currentTimeMillis();
 		boardService.saveList1(list);
 		long end = System.currentTimeMillis();
 		logger.info("실행 시간 : {}", (end - start) / 100);
-		
+
 		return new BaseResponse<Boolean>(true);
 	}
-	
+
 	@ApiOperation(value = "대용량 등록처리2", notes = "대용량 등록처리2")
 	@PutMapping("/saveList2")
 	public BaseResponse<Boolean> saveList2() {
@@ -106,16 +109,16 @@ public class BoardController {
 			String title = RandomStringUtils.randomAlphabetic(10);
 			String contents = RandomStringUtils.randomAlphabetic(10);
 			list.add(BoardParameter.builder().title(title).contents(contents).build());
-			if(count >= 10000) {
+			if (count >= 10000) {
 				break;
 			}
 		}
-		
+
 		long start = System.currentTimeMillis();
 		boardService.saveList2(list);
 		long end = System.currentTimeMillis();
 		logger.info("실행 시간 : {}", (end - start) / 100);
-		
+
 		return new BaseResponse<Boolean>(true);
 	}
 
