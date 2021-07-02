@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.common.domain.MariaPageRequest;
+import com.example.demo.common.domain.PageRequestParameter;
 import com.example.demo.configuration.exception.BaseException;
 import com.example.demo.configuration.http.BaseResponse;
 import com.example.demo.configuration.http.BaseResponseCode;
@@ -34,7 +36,7 @@ import io.swagger.annotations.ApiParam;
 @Api(tags = "게시판 API")
 public class BoardController {
 
-	Logger logger = LoggerFactory.getLogger(BoardController.class);
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	BoardService boardService;
@@ -43,8 +45,11 @@ public class BoardController {
 	@ApiOperation(value = "목록 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "keyword", value = "컨텐츠"),
 			@ApiImplicitParam(name = "boardTypes", value = "게시물검색"), })
-	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter parameter) {
-		return new BaseResponse<List<Board>>(boardService.getList(parameter));
+	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter parameter,
+			@ApiParam MariaPageRequest pageRequest) {
+		logger.info("pageRequest : {}", pageRequest);
+		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
+		return new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
 	}
 
 	@GetMapping("/{boardSeq}")

@@ -6,7 +6,7 @@
 <mapper
 	namespace="com.example.demo.mvc.repository.BoardRepository">
 	<select id="getList"
-		parameterType="com.example.demo.mvc.parameter.BoardSearchParameter"
+		parameterType="com.example.demo.common.domain.PageRequestParameter"
 		resultType="com.example.demo.mvc.domain.Board">
 		SELECT
 		B.BOARD_SEQ,
@@ -16,18 +16,19 @@
 		B.REG_DATE
 		FROM T_BOARD B
 		<where>
-			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(keyword)">
-				AND B.TITLE LIKE CONCAT('%', #{keyword}, '%')
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(parameter.keyword)">
+				AND B.TITLE LIKE CONCAT('%', #{parameter.keyword}, '%')
 			</if>
-			<if test="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(boardTypes)">
+			<if test="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(parameter.boardTypes)">
 				AND B.BOARD_TYPE IN (
-					<foreach collection="boardTypes" item="value" separator=",">
+					<foreach collection="parameter.boardTypes" item="value" separator=",">
 						#{value}
 					</foreach>
 				)
 			</if>
 		</where>
 		ORDER BY B.REG_DATE DESC
+		LIMIT #{pageRequest.limit}, #{pageRequest.offset}
 	</select>
 
 	<select id="get"
