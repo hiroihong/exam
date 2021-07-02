@@ -3,8 +3,12 @@ package com.example.demo.configuration.servlet.handler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.common.web.RequestConfig;
+import com.example.demo.configuration.exception.BaseException;
+import com.example.demo.configuration.http.BaseResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,6 +45,19 @@ public class BaseHandlerInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		logger.info("preHandle requestURI : {} ", request.getRequestURI());
+
+		if(handler instanceof HandlerMethod){
+			HandlerMethod handlerMethod = (HandlerMethod) handler;
+			logger.info("handlerMethod:{}",handlerMethod);
+			RequestConfig requestConfig = handlerMethod.getMethodAnnotation(RequestConfig.class);
+			if(requestConfig != null){
+				if(requestConfig.loginCheck()){
+					throw new BaseException(BaseResponseCode.LOGIN_REQUIRED);
+				}
+			}
+		}
+
+
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}
 

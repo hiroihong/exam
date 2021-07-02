@@ -5,7 +5,8 @@ public enum BaseResponseCode {
 	SUCCESS, //성공
 	ERROR, //실패
 	DATA_IS_NULL, //널
-	VALIDATE_REQUEIRED // 필수
+	VALIDATE_REQUEIRED, // 필수
+	LOGIN_REQUIRED;
 //
 //	SUCCESS(200), //성공
 //	ERROR(500), //실패

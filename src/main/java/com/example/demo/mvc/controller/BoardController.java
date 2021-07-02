@@ -3,6 +3,7 @@ package com.example.demo.mvc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.common.web.RequestConfig;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,7 @@ public class BoardController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌") })
+	@RequestConfig
 	public BaseResponse<Integer> save(BoardParameter parameter) {
 		// 제목 필수 체크
 		if (StringUtils.hasText(parameter.getTitle())) {
