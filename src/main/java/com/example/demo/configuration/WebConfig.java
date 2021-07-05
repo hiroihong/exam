@@ -65,6 +65,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 		// 페이지 리졸버 등록
+		// 자바파일 실행시에 매개변수 넣어서 실행하는 역활을 해줌.
 		resolvers.add(new MariaPageRequestHandleMethodArgumentResolver());
 	}
 

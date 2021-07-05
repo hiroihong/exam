@@ -69,15 +69,17 @@ public class BoardController {
 	@ApiOperation(value = "등록 / 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
-			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌") })
-	@RequestConfig
+			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌")
+	})
+	@RequestConfig(loginCheck = false)
 	public BaseResponse<Integer> save(BoardParameter parameter) {
+		
 		// 제목 필수 체크
-		if (StringUtils.hasText(parameter.getTitle())) {
+		if (!StringUtils.hasText(parameter.getTitle())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] { "title", "제목" });
 		}
 		// 내용 필수 체크
-		if (StringUtils.hasText(parameter.getContents())) {
+		if (!StringUtils.hasText(parameter.getContents())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUEIRED, new String[] { "title", "컨텐츠" });
 		}
 		return new BaseResponse<Integer>(boardService.save(parameter));
@@ -92,7 +94,8 @@ public class BoardController {
 			count++;
 			String title = RandomStringUtils.randomAlphabetic(10);
 			String contents = RandomStringUtils.randomAlphabetic(10);
-			list.add(BoardParameter.builder().title(title).contents(contents).build());
+//			list.add(BoardParameter.builder().title(title).contents(contents).build());
+			list.add(new BoardParameter(title, contents));
 			if (count >= 10000) {
 				break;
 			}
@@ -115,7 +118,8 @@ public class BoardController {
 			count++;
 			String title = RandomStringUtils.randomAlphabetic(10);
 			String contents = RandomStringUtils.randomAlphabetic(10);
-			list.add(BoardParameter.builder().title(title).contents(contents).build());
+//			list.add(BoardParameter.builder().title(title).contents(contents).build());
+			list.add(new BoardParameter(title, contents));
 			if (count >= 10000) {
 				break;
 			}

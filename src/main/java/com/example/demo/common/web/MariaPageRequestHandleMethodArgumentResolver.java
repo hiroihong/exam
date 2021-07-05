@@ -25,6 +25,7 @@ public class MariaPageRequestHandleMethodArgumentResolver implements HandlerMeth
 
 	private static final String DEFAULT_PARAMETER_PAGE = "page";
 	private static final String DEFAULT_PARAMETER_SIZE = "size";
+	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_SIZE = 20;
 
 	@Override
@@ -38,7 +39,7 @@ public class MariaPageRequestHandleMethodArgumentResolver implements HandlerMeth
 
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 		// 현재 페이지
-		int page = NumberUtils.toInt(request.getParameter(DEFAULT_PARAMETER_PAGE));
+		int page = NumberUtils.toInt(request.getParameter(DEFAULT_PARAMETER_PAGE), DEFAULT_PAGE);
 
 		// 리스트 갯수
 		int offset = NumberUtils.toInt(request.getParameter(DEFAULT_PARAMETER_SIZE), DEFAULT_SIZE);
