@@ -1,15 +1,29 @@
 package com.example.demo.mvc.controller;
 
-import com.example.demo.configuration.GlobalConfig;
-import com.example.demo.configuration.http.BaseResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.configuration.GlobalConfig;
+import com.example.demo.configuration.exception.BaseException;
+import com.example.demo.configuration.http.BaseResponse;
+import com.example.demo.configuration.http.BaseResponseCode;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/file")
@@ -20,12 +34,46 @@ public class FileContoller {
 
     @Autowired
     private GlobalConfig globalConfig;
+    
+    
+    @GetMapping("/")
+    public String save(Model model){
+        return "index";
+    }
 
-    @GetMapping
+
+    @PostMapping("/save")
     @ApiOperation(value = "업로드",notes = "")
-    public BaseResponse<Boolean> save(){
+    public BaseResponse<Boolean> save(@RequestParam MultipartFile uploadFile){
+    	
+    	logger.debug("uploadFile : {}", uploadFile);
+    	if(uploadFile == null || uploadFile.isEmpty()) {
+    		throw new BaseException(BaseResponseCode.DATA_IS_NULL);
+    	}
+    	
         String uploadFilePath = globalConfig.getUploadFilePath();
-        logger.info("uploadfilepath : {}", uploadFilePath);
+        logger.debug("uploadfilepath : {}", uploadFilePath);
+        
+        String prefix = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
+        String filename = UUID.randomUUID().toString() + "." + prefix;
+        logger.info("filename : {}", filename);
+        
+        File folder = new File(uploadFilePath);
+        if(!folder.isDirectory()) {
+        	folder.mkdirs();
+        }
+        
+        String pathname = uploadFilePath + filename;
+        File dest = new File(pathname);
+        logger.debug("dest : {}", dest);
+        
+        
+        try {
+			uploadFile.transferTo(dest);
+		} catch (IllegalStateException | IOException e) {
+			logger.error("e",e);
+		}
+        
 
         return new BaseResponse<Boolean>(true);
     }

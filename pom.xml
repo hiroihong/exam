@@ -78,6 +78,25 @@
         	<groupId>org.apache.commons</groupId>
         	<artifactId>commons-lang3</artifactId>
         </dependency>
+        
+        <!-- 파일업로드 -->
+        <dependency>
+        	<groupId>org.apache.tomcat.embed</groupId>
+        	<artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+        <!-- 파일확장자 -->
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.4</version>
+		</dependency>
+        <!-- jstl -->
+        <dependency>
+        	<groupId>jstl</groupId>
+        	<artifactId>jstl</artifactId>
+        	<version>1.2</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
